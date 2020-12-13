@@ -1,57 +1,52 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js" lang=""></html>
+
 <head>
-<style>
-div {
-  background-color: lightgrey;
-  width: 300px;
-  height: 200px;
-  border: 5px  solid black;
-  padding: 50px;
-  margin: 1px;
-  float :left;
-  text-align: center;
-}
-textarea{ 
-  
-   float: right ;
-   resize:vertical;
-   border: 3px solid black ;
-   text-align: center;
-}
-h2{
-  text-align: center;
-}
-</style>
+  <meta charset="utf-8">
+  <title>Live Captioning</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="buttons.css">
+  <link rel="stylesheet" href="buttons_code.css">
 </head>
+
+<!-- Captions Page-->
 <body>
+  <section id="lc-intro">
+    <div id="lc">
+      <span id="lc-button" ><button class="btn third" onclick="toggleSpeechRecognition(event)">View Live Caption</button></span>
+      <span id="lc-text" style="display: none;" onclick="toggleSpeechRecognition(event)" tabindex="0">You May start Lcture..</span>
+      <div id="lc-refresh">
+            <button onclick="refresh(event)">REFRESH</button>
+            <button onclick="toggleSpeechRecognition(event)">STOP</button>
+      </div>
+    </div>
 
-<h2>Live video captioning</h2>
+
+    <!-- NEW RECORDING BUTTON-->
+    <div id="lc-rec">
+      <div id="new-recording">
+            <button class="btn third" onclick="newSession(event)">Start new session recording</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW SECTION (DROP DOWN AND CONTINUE & VIEW CAPTIONS-->
 
 
+  <section id="lc-sessions">
+    <label for="session-select">Choose a Session</label><select id="session-select"></select>
+    <div id="session-continue"><button class="button button--tamaya button--border-thick" data-text="Resume Lecture" onclick="continueSession(event)">Continue selected session</button></div>
+    <div id="session-view"><button class="button button--tamaya button--border-thick" data-text="View Lecture Notes" onclick="viewSession()">View selected session transcript</button></div>
+    <div id="lc-transcript">
+          <div><textarea id="t"></textarea><div>
+          <div id="lc-session-types">
+            <span id="session-view"><button class="lc-btn" onclick="saveTextAsFile(t.value,'Lecture_Notes.txt')">Download!</button></span>
+          </div>
+    </div>
+    <!-- JS files-->
+  </section>
+  <script src="jquery.js"></script>
+  <script src="captions.js"></script>
 
-<div>video will be played here.</div><br>
-
-
-<textarea id="srujan" rows="5" cols="40"> subtitles will appear here </textarea>
-
-<span style="display:block; height: 350px;"></span>
-
-<span style="display:inline-block; width: 50px;"></span>
-
-<button type="button">new</button> 
-
-<span style="display:inline-block; width: 200px;"></span>
-
-<button type="button">live</button> 
-
-<span style="display:inline-block; width: 200px;"></span>
-
-<button type="button">okay</button> 
-
-<span style="display:inline-block; width: 20px;"></span>
-
-<button type="button">download</button> 
 </body>
 </html>
-
