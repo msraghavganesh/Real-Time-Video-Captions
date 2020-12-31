@@ -103,7 +103,7 @@ function createSession(){
     id = sessions[sessions.length-1].id + 1;
   }
   name = 'session_' + id;
-  startTime = new Date();
+  startTime= new Date();
   
   sessions.push({'id': id, 'name': name, 'startTime': startTime});
   saveToLocalStorage('sessions', sessions);
@@ -216,7 +216,7 @@ function recordSession(){
 function addToTranscript(sessionName, text){
   if (text){
     var endTime = new Date();
-    transcript.push({"startTime": startTime ,"endTime": endTime ,"text": text});
+    transcript.push({"startTime": beginTime, "endTime": endTime, "text": text});
     // Reset the beginTime
     beginTime = endTime;
     saveToLocalStorage(sessionName, JSON.stringify(transcript));
