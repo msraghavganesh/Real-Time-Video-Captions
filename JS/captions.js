@@ -1,4 +1,3 @@
-// Set vars.
 var lc = document.getElementById('lc-text');
 var button = document.getElementById('lc-button');
 
@@ -8,8 +7,8 @@ var recognition = new webkitSpeechRecognition();
 var sessions = loadFromLocalStorage('sessions');
 var currentSession = null;
 var transcript = [];
-//var startTime;
-//var beginTime;
+var time_S;
+var time_Begin;
 var autoRestart = false;
 
 recognition.continuous = true;
@@ -101,7 +100,6 @@ function createSession(){
   if (sessions.length === 0){
     id = 1;
   }else{
-    // look at last ID, since they may not be sequential
     id = sessions[sessions.length-1].id + 1;
   }
   name = 'session_' + id;
@@ -128,11 +126,7 @@ function locationHashChanged() {
 
 
 function showRecordings (){
-  // Populate and show recordings section - maybe only if they're on a page with a hash tag
-  
   var select = document.getElementById('session-select');
-  
-  // Clear any existing options, since we're refreshing after recording
   for(i = select.options.length - 1 ; i >= 0 ; i--){
     select.remove(i);
   }
@@ -164,8 +158,6 @@ function viewSession(format) {
     case "text":
       textArea.value = formatTranscriptText(loadFromLocalStorage(sessions[select.value].name));
       break;
-    case "srt":
-    case "webVTT":
     default:
       textArea.value = formatTranscriptTimeStamped(loadFromLocalStorage(sessions[select.value].name), sessions[select.value].startTime, format);
       break;
@@ -208,7 +200,7 @@ function recordSession(){
   }
 
   // Set the begin time for the session, which may be a continuation
-  beginTime = new Date();
+  time_Begin = new Date();
 
   // Add hash to URL, so that a refresh will add to the same session
   window.location.hash = sessions[currentSession].name;
@@ -223,10 +215,10 @@ function recordSession(){
  */
 function addToTranscript(sessionName, text){
   if (text){
-    var endTime = new Date();
+    var time_E = new Date();
     transcript.push({"text": text});
     // Reset the beginTime
-    beginTime = endTime;
+    time_Begin = time_E;
     saveToLocalStorage(sessionName, JSON.stringify(transcript));
   }
 }
@@ -264,16 +256,11 @@ function formatElapsedTime(timeString, startTimeString, format){
           millisecondsSeparator + String(milliseconds).padStart(3,'0');
 }
 
-/**
- * Format the transcript array into a timestamped output format
- * such as SRT or WebVTT.
- *
- */
 function formatTranscriptTimeStamped(transcript, startTime, format){
   var output = "";
   for (var i = 0; i < transcript.length; ++i) {
     output += i+1 + "<--Para number \n";
-    //output += formatElapsedTime(transcript[i].startTime, startTime, format) + " --> " + formatElapsedTime(transcript[i].endTime, startTime, format) + "\n";
+    output += formatElapsedTime(transcript[i].startTime, startTime, format) + " --> " + formatElapsedTime(transcript[i].endTime, startTime, format) + "\n";
     output += transcript[i].text + "\n\n";
   }
   return output;
@@ -331,14 +318,10 @@ function saveTextAsFile(textToWrite, fileNameToSaveAs)
     	downloadLink.innerHTML = "Download File";
     	if (window.webkitURL != null)
     	{
-    		// Chrome allows the link to be clicked
-    		// without actually adding it to the DOM.
     		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
     	}
     	else
     	{
-    		// Firefox requires the link to be added to the DOM
-    		// before it can be clicked.
     		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
     		downloadLink.onclick = destroyClickedElement;
     		downloadLink.style.display = "none";
