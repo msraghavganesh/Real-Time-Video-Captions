@@ -7,8 +7,8 @@ var recognition = new webkitSpeechRecognition();
 var sessions = loadFromLocalStorage('sessions');
 var currentSession = null;
 var transcript = [];
-var time_S;
-var time_Begin;
+var startTime;
+var beginTime;
 var autoRestart = false;
 
 recognition.continuous = true;
@@ -200,7 +200,7 @@ function recordSession(){
   }
 
   // Set the begin time for the session, which may be a continuation
-  time_Begin = new Date();
+  beginTime = new Date();
 
   // Add hash to URL, so that a refresh will add to the same session
   window.location.hash = sessions[currentSession].name;
@@ -215,10 +215,10 @@ function recordSession(){
  */
 function addToTranscript(sessionName, text){
   if (text){
-    var time_E = new Date();
-    transcript.push({"text": text});
+    var endTime = new Date();
+    transcript.push({"startTime": startTime ,"endTime": endTime ,"text": text});
     // Reset the beginTime
-    time_Begin = time_E;
+    beginTime = endTime;
     saveToLocalStorage(sessionName, JSON.stringify(transcript));
   }
 }
@@ -232,7 +232,7 @@ function addToTranscript(sessionName, text){
  */
 function formatElapsedTime(timeString, startTimeString, format){
   var time = new Date(timeString);
-  var startTime = new Date(startTimeString);
+  var startTime= new Date(startTimeString);
 
   var elapsedTime = time - startTime;
 
